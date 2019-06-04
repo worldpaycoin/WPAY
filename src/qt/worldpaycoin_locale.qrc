@@ -1,0 +1,36 @@
+<!DOCTYPE RCC><RCC version="1.0">
+    <qresource prefix="/translations">
+        <file alias="bg">locale/worldpaycoin_bg.qm</file>
+        <file alias="ca">locale/worldpaycoin_ca.qm</file>
+        <file alias="cs">locale/worldpaycoin_cs.qm</file>
+        <file alias="da">locale/worldpaycoin_da.qm</file>
+        <file alias="de">locale/worldpaycoin_de.qm</file>
+        <file alias="en">locale/worldpaycoin_en.qm</file>
+        <file alias="en_US">locale/worldpaycoin_en_US.qm</file>
+        <file alias="eo">locale/worldpaycoin_eo.qm</file>
+        <file alias="es">locale/worldpaycoin_es.qm</file>
+        <file alias="es_ES">locale/worldpaycoin_es_ES.qm</file>
+        <file alias="fi">locale/worldpaycoin_fi.qm</file>
+        <file alias="fr_FR">locale/worldpaycoin_fr_FR.qm</file>
+        <file alias="hi_IN">locale/worldpaycoin_hi_IN.qm</file>
+        <file alias="hr">locale/worldpaycoin_hr.qm</file>
+        <file alias="hr_HR">locale/worldpaycoin_hr_HR.qm</file>
+        <file alias="it">locale/worldpaycoin_it.qm</file>
+        <file alias="ja">locale/worldpaycoin_ja.qm</file>
+        <file alias="ko_KR">locale/worldpaycoin_ko_KR.qm</file>
+        <file alias="lt_LT">locale/worldpaycoin_lt_LT.qm</file>
+        <file alias="nl">locale/worldpaycoin_nl.qm</file>
+        <file alias="pl">locale/worldpaycoin_pl.qm</file>
+        <file alias="pt">locale/worldpaycoin_pt.qm</file>
+        <file alias="pt_BR">locale/worldpaycoin_pt_BR.qm</file>
+        <file alias="ro_RO">locale/worldpaycoin_ro_RO.qm</file>
+        <file alias="ru">locale/worldpaycoin_ru.qm</file>
+        <file alias="sk">locale/worldpaycoin_sk.qm</file>
+        <file alias="sv">locale/worldpaycoin_sv.qm</file>
+        <file alias="tr">locale/worldpaycoin_tr.qm</file>
+        <file alias="uk">locale/worldpaycoin_uk.qm</file>
+        <file alias="vi">locale/worldpaycoin_vi.qm</file>
+        <file alias="zh_CN">locale/worldpaycoin_zh_CN.qm</file>
+        <file alias="zh_TW">locale/worldpaycoin_zh_TW.qm</file>
+    </qresource>
+</RCC>

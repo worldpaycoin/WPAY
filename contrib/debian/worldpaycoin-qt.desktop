@@ -1,0 +1,12 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=WPAY
+Comment=WPAY P2P Cryptocurrency
+Comment[fr]=WPAY, monnaie virtuelle cryptographique pair à pair
+Comment[tr]=WPAY, eşten eşe kriptografik sanal para birimi
+Exec=worldpaycoin-qt %u
+Terminal=false
+Type=Application
+Icon=worldpaycoin128
+MimeType=x-scheme-handler/worldpaycoin;
+Categories=Office;Finance;

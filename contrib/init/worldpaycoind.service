@@ -1,0 +1,26 @@
+[Unit]
+Description=WPAY's distributed currency daemon
+After=network.target
+
+[Service]
+User=worldpaycoin
+Group=worldpaycoin
+
+Type=forking
+PIDFile=/var/lib/worldpaycoind/worldpaycoind.pid
+
+ExecStart=/usr/bin/worldpaycoind -daemon -pid=/var/lib/worldpaycoind/worldpaycoind.pid \
+          -conf=/etc/worldpaycoin/worldpaycoin.conf -datadir=/var/lib/worldpaycoind
+
+ExecStop=-/usr/bin/worldpaycoin-cli -conf=/etc/worldpaycoin/worldpaycoin.conf \
+         -datadir=/var/lib/worldpaycoind stop
+
+Restart=always
+PrivateTmp=true
+TimeoutStopSec=60s
+TimeoutStartSec=2s
+StartLimitInterval=120s
+StartLimitBurst=5
+
+[Install]
+WantedBy=multi-user.target
