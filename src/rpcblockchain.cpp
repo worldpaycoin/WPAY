@@ -123,8 +123,8 @@ UniValue blockToJSON(const CBlock& block, const CBlockIndex* blockindex, bool tx
     for (auto denom : libzerocoin::zerocoinDenomList) {
         zpivObj.push_back(Pair(to_string(denom), ValueFromAmount(blockindex->mapZerocoinSupply.at(denom) * (denom*COIN))));
     }
-    zpivObj.push_back(Pair("total", ValueFromAmount(blockindex->GetZerocoinSupply())));
-    result.push_back(Pair("zWPAYsupply", zpivObj));
+    // zpivObj.push_back(Pair("total", ValueFromAmount(blockindex->GetZerocoinSupply())));
+    // result.push_back(Pair("zWPAYsupply", zpivObj));
 
     return result;
 }
@@ -324,18 +324,18 @@ UniValue getblock(const UniValue& params, bool fHelp)
             "  \"previousblockhash\" : \"hash\",  (string) The hash of the previous block\n"
             "  \"nextblockhash\" : \"hash\"       (string) The hash of the next block\n"
             "  \"moneysupply\" : \"supply\"       (numeric) The money supply when this block was added to the blockchain\n"
-            "  \"zWPAYsupply\" :\n"
-            "  {\n"
-            "     \"1\" : n,            (numeric) supply of 1 zWPAY denomination\n"
-            "     \"5\" : n,            (numeric) supply of 5 zWPAY denomination\n"
-            "     \"10\" : n,           (numeric) supply of 10 zWPAY denomination\n"
-            "     \"50\" : n,           (numeric) supply of 50 zWPAY denomination\n"
-            "     \"100\" : n,          (numeric) supply of 100 zWPAY denomination\n"
-            "     \"500\" : n,          (numeric) supply of 500 zWPAY denomination\n"
-            "     \"1000\" : n,         (numeric) supply of 1000 zWPAY denomination\n"
-            "     \"5000\" : n,         (numeric) supply of 5000 zWPAY denomination\n"
-            "     \"total\" : n,        (numeric) The total supply of all zWPAY denominations\n"
-            "  }\n"
+            // "  \"zWPAYsupply\" :\n"
+            // "  {\n"
+            // "     \"1\" : n,            (numeric) supply of 1 zWPAY denomination\n"
+            // "     \"5\" : n,            (numeric) supply of 5 zWPAY denomination\n"
+            // "     \"10\" : n,           (numeric) supply of 10 zWPAY denomination\n"
+            // "     \"50\" : n,           (numeric) supply of 50 zWPAY denomination\n"
+            // "     \"100\" : n,          (numeric) supply of 100 zWPAY denomination\n"
+            // "     \"500\" : n,          (numeric) supply of 500 zWPAY denomination\n"
+            // "     \"1000\" : n,         (numeric) supply of 1000 zWPAY denomination\n"
+            // "     \"5000\" : n,         (numeric) supply of 5000 zWPAY denomination\n"
+            // "     \"total\" : n,        (numeric) The total supply of all zWPAY denominations\n"
+            // "  }\n"
             "}\n"
 
             "\nResult (for verbose=false):\n"

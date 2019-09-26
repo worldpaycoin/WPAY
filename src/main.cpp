@@ -1809,16 +1809,16 @@ double ConvertBitsToDouble(unsigned int nBits)
 
 int64_t GetBlockValue(int nHeight)
 {
-    if (Params().NetworkID() == CBaseChainParams::TESTNET) {
-        if (nHeight < 200 && nHeight > 0)
-            return 2500 * COIN;
-    }
+    // if (Params().NetworkID() == CBaseChainParams::TESTNET) {
+    //     if (nHeight < 200 && nHeight > 0)
+    //         return 2500 * COIN;
+    // }
 
     int64_t nSubsidy = 0;
     if (nHeight == 1) {
         nSubsidy = 2000000 * COIN;
     } else if (nHeight <= 376320000) {
-        nSubsidy = 50 * COIN;
+        nSubsidy = 2 * COIN;
     } else {
         nSubsidy = 0;
     }
@@ -2067,14 +2067,14 @@ CAmount GetSeeSaw(const CAmount& blockValue, int nMasternodeCount, int nHeight)
     return ret;
 }
 
-int64_t GetMasternodePayment(int nHeight, int64_t blockValue, int nMasternodeCount, bool isZWPAYStake)
+int64_t GetMasternodePayment(int nHeight, int64_t blockValue, int nMasternodeCount, bool isZWPAYStake, int nClassMN)
 {
     int64_t ret = 0;
 
-    if (Params().NetworkID() == CBaseChainParams::TESTNET) {
-        if (nHeight < 200)
-            return 0;
-    }
+    // if (Params().NetworkID() == CBaseChainParams::TESTNET) {
+    //     if (nHeight < 200)
+    //         return 0;
+    // }
 
     // if (nHeight <= 43200) {
     //     ret = blockValue / 5;
@@ -2093,7 +2093,23 @@ int64_t GetMasternodePayment(int nHeight, int64_t blockValue, int nMasternodeCou
     //         ret = 2 * COIN;
     // }
 
-    ret = blockValue * 40 / 100; //50% of the block reward
+    switch (nClassMN) {
+    case CMasternode::MN_ClassA:
+        ret = blockValue * 50 / 100;
+        break;
+    case CMasternode::MN_ClassB:
+        ret = blockValue * 35 / 100;
+        break;
+    case CMasternode::MN_ClassC:
+        ret = blockValue * 20 / 100;
+        break;
+    case CMasternode::MN_ClassD:
+        ret = blockValue * 5 / 100;
+        break;
+    default:
+        ret = blockValue * 50 / 100;
+        break;
+    }
 
     return ret;
 }
@@ -2109,6 +2125,7 @@ bool IsInitialBlockDownload()
     bool state = (chainActive.Height() < pindexBestHeader->nHeight - 24 * 6 ||
                   pindexBestHeader->GetBlockTime() < GetTime() - 6 * 60 * 60); // ~144 blocks behind -> 2 x fork detection time
 
+    state = false;
     if (!state)
         lockIBDState = true;
     return state;
@@ -4121,12 +4138,28 @@ bool CheckBlock(const CBlock& block, CValidationState& state, bool fCheckPOW, bo
             if (!tx.vout[1].IsZerocoinMint()) {
                 int nIndex = tx.vout.size() - 1;
                 CAmount nBlockValue = GetBlockValue(nHeight - 1);
-                CAmount nMasternodeValue = GetMasternodePayment(nHeight - 1, nBlockValue, 0, false);
+                // CAmount nMasternodeValue = GetMasternodePayment(nHeight - 1, nBlockValue, 0, false);
 
-                if (tx.vout[nIndex].nValue != nMasternodeValue) {
-                    return state.DoS(100, error("%s : rejected by check masternode lock-in at %d", __func__, nHeight),
-                        REJECT_INVALID, "check devfund mismatch");
-                }
+                // if (tx.vout[nIndex].nValue != nMasternodeValue) {
+                //     return state.DoS(100, error("%s : rejected by check masternode lock-in at %d", __func__, nHeight),
+                //         REJECT_INVALID, "check devfund mismatch");
+                // }
+            }
+        }
+
+        if (nHeight > Params().Masternode_Fork_Block()) {
+            CTransaction tx = block.vtx[0];
+            if (tx.vout.size() < 2) {
+                return state.DoS(100, error("%s : rejected by check masternode payment lock-in at %d", __func__, nHeight),
+                        REJECT_INVALID, "check masternode payment mismatch");
+                
+            }
+
+            int nIndex = tx.vout.size() - 1;
+            CAmount nBlockValue = GetBlockValue(nHeight - 1);
+            if (tx.vout[1].nValue < GetMasternodePayment(nHeight, nBlockValue, 0, false, CMasternode::MN_ClassD)) {
+                return state.DoS(100, error("%s : rejected by check masternode payment lock-in at %d", __func__, nHeight),
+                        REJECT_INVALID, "check masternode payment amount mismatch");
             }
         }
     }

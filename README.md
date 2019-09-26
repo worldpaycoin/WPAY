@@ -1,7 +1,7 @@
 WPAY Core integration/staging tree
 ===================================
 
-https://www.WPAY.io
+https://www.worldpaycoin.org
 
 What is WPAY?
 --------------
@@ -13,7 +13,7 @@ out collectively by the network. WPAY Core is the name of open source
 software which enables the use of this currency.
 
 For more information, as well as an immediately useable, binary version of
-the WPAY Core software, see https://www.WPAY.io/.
+the WPAY Core software, see https://www.worldpaycoin.org/.
 
 License
 -------

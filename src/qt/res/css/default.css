@@ -118,7 +118,7 @@ background-color:#fff;
 }
 
 QProgressBar {
-color: #AAAAAA;
+color: #000;
 border:0px solid grey;
 border-radius:5px;
 background-color:transparent;
@@ -775,7 +775,7 @@ border: 1px solid #818181;
 border-radius: 1px;
 margin-right:43px;
 text-align: right;
-color:#818181;
+color:#000;
 }
 
 QWidget#PrivacyDialog QProgressBar#obfuscationProgress::chunk {

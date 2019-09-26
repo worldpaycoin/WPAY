@@ -17,14 +17,17 @@
 uint256 CBlockHeader::GetBlockHash() const
 {
     // if(nVersion < 4)
-    if (nTime % 3 == 0) {
+    if (nTime % 4 == 0) {
         return HashJKS(BEGIN(nVersion), END(nNonce));
     }
-    if (nTime % 3 == 1) {
+    if (nTime % 4 == 1) {
         return HashKSJ(BEGIN(nVersion), END(nNonce));
     }
-    if (nTime % 3 == 2) {
+    if (nTime % 4 == 2) {
         return HashSJK(BEGIN(nVersion), END(nNonce));
+    }
+    if (nTime % 4 == 3) {
+        return HashQuark(BEGIN(nVersion), END(nNonce));
     }
 
     // return Hash(BEGIN(nVersion), END(nAccumulatorCheckpoint));

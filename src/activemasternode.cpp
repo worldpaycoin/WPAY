@@ -107,8 +107,9 @@ void CActiveMasternode::ManageStatus()
                 return;
             }
 
+            int nMNClass = GetMasterNodeClass("", "");
             CMasternodeBroadcast mnb;
-            if (!CreateBroadcast(vin, service, keyCollateralAddress, pubKeyCollateralAddress, keyMasternode, pubKeyMasternode, errorMessage, mnb)) {
+            if (!CreateBroadcast(vin, service, keyCollateralAddress, pubKeyCollateralAddress, keyMasternode, pubKeyMasternode, errorMessage, mnb, nMNClass)) {
                 notCapableReason = "Error on Register: " + errorMessage;
                 LogPrintf("CActiveMasternode::ManageStatus() - %s\n", notCapableReason);
                 return;
@@ -271,10 +272,11 @@ bool CActiveMasternode::CreateBroadcast(std::string strService, std::string strK
 
     addrman.Add(CAddress(service), CNetAddr("127.0.0.1"), 2 * 60 * 60);
 
-    return CreateBroadcast(vin, CService(strService), keyCollateralAddress, pubKeyCollateralAddress, keyMasternode, pubKeyMasternode, errorMessage, mnb);
+    int nMNClass = GetMasterNodeClass(strTxHash, strOutputIndex);
+    return CreateBroadcast(vin, CService(strService), keyCollateralAddress, pubKeyCollateralAddress, keyMasternode, pubKeyMasternode, errorMessage, mnb, nMNClass);
 }
 
-bool CActiveMasternode::CreateBroadcast(CTxIn vin, CService service, CKey keyCollateralAddress, CPubKey pubKeyCollateralAddress, CKey keyMasternode, CPubKey pubKeyMasternode, std::string& errorMessage, CMasternodeBroadcast &mnb)
+bool CActiveMasternode::CreateBroadcast(CTxIn vin, CService service, CKey keyCollateralAddress, CPubKey pubKeyCollateralAddress, CKey keyMasternode, CPubKey pubKeyMasternode, std::string& errorMessage, CMasternodeBroadcast &mnb, int nMNClass)
 {
 	// wait for reindex and/or import to finish
 	if (fImporting || fReindex) return false;
@@ -287,7 +289,7 @@ bool CActiveMasternode::CreateBroadcast(CTxIn vin, CService service, CKey keyCol
         return false;
     }
 
-    mnb = CMasternodeBroadcast(service, vin, pubKeyCollateralAddress, pubKeyMasternode, PROTOCOL_VERSION);
+    mnb = CMasternodeBroadcast(service, vin, pubKeyCollateralAddress, pubKeyMasternode, PROTOCOL_VERSION, nMNClass);
     mnb.lastPing = mnp;
     if (!mnb.Sign(keyCollateralAddress)) {
         errorMessage = strprintf("Failed to sign broadcast, vin: %s", vin.ToString());
@@ -392,6 +394,66 @@ bool CActiveMasternode::GetMasterNodeVin(CTxIn& vin, CPubKey& pubkey, CKey& secr
     return GetVinFromOutput(*selectedOutput, vin, pubkey, secretKey);
 }
 
+int CActiveMasternode::GetMasterNodeClass(std::string strTxHash, std::string strOutputIndex) {
+// wait for reindex and/or import to finish
+	if (fImporting || fReindex) return -1;
+
+    // Find possible candidates
+    TRY_LOCK(pwalletMain->cs_wallet, fWallet);
+    if (!fWallet) return -1;
+
+    vector<COutput> possibleCoins = SelectCoinsMasternode();
+    COutput* selectedOutput;
+
+    // Find the vin
+    if (!strTxHash.empty()) {
+        // Let's find it
+        uint256 txHash(strTxHash);
+        int outputIndex;
+        try {
+            outputIndex = std::stoi(strOutputIndex.c_str());
+        } catch (const std::exception& e) {
+            LogPrintf("%s: %s on strOutputIndex\n", __func__, e.what());
+            return -1;
+        }
+
+        bool found = -1;
+        BOOST_FOREACH (COutput& out, possibleCoins) {
+            if (out.tx->GetHash() == txHash && out.i == outputIndex) {
+                selectedOutput = &out;
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            LogPrintf("CActiveMasternode::GetMasterNodeClass - Could not locate valid vin\n");
+            return -1;
+        }
+    } else {
+        // No output specified,  Select the first one
+        if (possibleCoins.size() > 0) {
+            selectedOutput = &possibleCoins[0];
+        } else {
+            LogPrintf("CActiveMasternode::GetMasterNodeClass - Could not locate specified vin from possible list\n");
+            return -1;
+        }
+    }
+
+    if (selectedOutput->tx->vout[selectedOutput->i].nValue == Params().MasternodeCollateralClassA()) { //exactly
+        return CMasternode::MN_ClassA;
+    }
+    if (selectedOutput->tx->vout[selectedOutput->i].nValue == Params().MasternodeCollateralClassB()) { //exactly
+        return CMasternode::MN_ClassB;
+    }
+    if (selectedOutput->tx->vout[selectedOutput->i].nValue == Params().MasternodeCollateralClassC()) { //exactly
+        return CMasternode::MN_ClassC;
+    }
+    if (selectedOutput->tx->vout[selectedOutput->i].nValue == Params().MasternodeCollateralClassD()) { //exactly
+        return CMasternode::MN_ClassD;
+    }
+
+    return -1;
+}
 
 // Extract Masternode vin information from output
 bool CActiveMasternode::GetVinFromOutput(COutput out, CTxIn& vin, CPubKey& pubkey, CKey& secretKey)
@@ -457,7 +519,16 @@ vector<COutput> CActiveMasternode::SelectCoinsMasternode()
 
     // Filter
     BOOST_FOREACH (const COutput& out, vCoins) {
-        if (out.tx->vout[out.i].nValue == Params().MasternodeCollateral()) { //exactly
+        if (out.tx->vout[out.i].nValue == Params().MasternodeCollateralClassA()) { //exactly
+            filteredCoins.push_back(out);
+        }
+        if (out.tx->vout[out.i].nValue == Params().MasternodeCollateralClassB()) { //exactly
+            filteredCoins.push_back(out);
+        }
+        if (out.tx->vout[out.i].nValue == Params().MasternodeCollateralClassC()) { //exactly
+            filteredCoins.push_back(out);
+        }
+        if (out.tx->vout[out.i].nValue == Params().MasternodeCollateralClassD()) { //exactly
             filteredCoins.push_back(out);
         }
     }

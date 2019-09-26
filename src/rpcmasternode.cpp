@@ -243,6 +243,7 @@ UniValue listmasternodes(const UniValue& params, bool fHelp)
                 CBitcoinAddress(mn->pubKeyCollateralAddress.GetID()).ToString().find(strFilter) == string::npos) continue;
 
             std::string strStatus = mn->Status();
+            std::string strClass = mn->GetClass();
             std::string strHost;
             int port;
             SplitHostPort(mn->addr.ToString(), port, strHost);
@@ -254,6 +255,7 @@ UniValue listmasternodes(const UniValue& params, bool fHelp)
             obj.push_back(Pair("txhash", strTxHash));
             obj.push_back(Pair("outidx", (uint64_t)oIdx));
             obj.push_back(Pair("status", strStatus));
+            obj.push_back(Pair("class", strClass));
             obj.push_back(Pair("addr", CBitcoinAddress(mn->pubKeyCollateralAddress.GetID()).ToString()));
             obj.push_back(Pair("version", mn->protocolVersion));
             obj.push_back(Pair("lastseen", (int64_t)mn->lastPing.sigTime));

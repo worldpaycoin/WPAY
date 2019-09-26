@@ -24,6 +24,9 @@
 #include "crypto/sph_keccak.h"
 #include "crypto/sph_shavite.h"
 #include "crypto/sph_skein.h"
+#include "crypto/sph_luffa.h"
+#include "crypto/sph_cubehash.h"
+#include "crypto/sph_simd.h"
 
 #include <iomanip>
 #include <openssl/sha.h>

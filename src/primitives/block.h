@@ -24,6 +24,58 @@ static const unsigned int MAX_BLOCK_SIZE_LEGACY = 1000000;
  * in the block is a special one that creates a new coin owned by the creator
  * of the block.
  */
+
+class CMinerSignature
+{
+    uint8_t sgn[65];
+
+public:
+    CMinerSignature()
+    {
+        SetNull();
+    }
+
+    unsigned int size() const    { return 65; }
+
+          uint8_t* begin()          { return sgn; }
+    const uint8_t* begin() const    { return sgn; }
+          uint8_t* end()            { return sgn + size(); }
+    const uint8_t* end() const      { return sgn + size(); }
+
+    void SetNull()
+    {
+        memset(sgn, 0, size());
+    }
+
+    std::string ToString() const
+    {
+        std::string Str;
+        for (unsigned int i = 0; i < size(); i++)
+        {
+            Str += "0123456789abcdef"[sgn[i] / 16];
+            Str += "0123456789abcdef"[sgn[i] % 16];
+        }
+        return Str;
+    }
+
+    unsigned int GetSerializeSize(int nType=0, int nVersion=PROTOCOL_VERSION) const
+    {
+        return size();
+    }
+
+    template<typename Stream>
+    void Serialize(Stream& s, int nType=0, int nVersion=PROTOCOL_VERSION) const
+    {
+        s.write((const char*)sgn, size());
+    }
+
+    template<typename Stream>
+    void Unserialize(Stream& s, int nType=0, int nVersion=PROTOCOL_VERSION)
+    {
+        s.read((char*)sgn, size());
+    }
+};
+
 class CBlockHeader
 {
 public:
@@ -36,6 +88,10 @@ public:
     uint32_t nBits;
     uint32_t nNonce;
     uint256 nAccumulatorCheckpoint;
+
+    // Spread mining extensions:
+    uint256 hashWholeBlock; // proof of whole block knowledge
+    CMinerSignature MinerSignature; // proof of private key knowledge
 
     CBlockHeader()
     {
@@ -55,8 +111,13 @@ public:
         READWRITE(nNonce);
 
         //zerocoin active, header changes to include accumulator checksum
-        if(nVersion > 3)
+        if(nVersion > 3) {
             READWRITE(nAccumulatorCheckpoint);
+        }
+        if (nVersion > 4) {
+            READWRITE(hashWholeBlock);
+            READWRITE(MinerSignature);
+        }
     }
 
     void SetNull()
@@ -68,6 +129,8 @@ public:
         nBits = 0;
         nNonce = 0;
         nAccumulatorCheckpoint = 0;
+        hashWholeBlock = 0;
+        MinerSignature.SetNull();
     }
 
     bool IsNull() const

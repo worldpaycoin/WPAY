@@ -54,9 +54,9 @@ static void convertSeed6(std::vector<CAddress>& vSeedsOut, const SeedSpec6* data
 // + Contains no strange transactions
 static Checkpoints::MapCheckpoints mapCheckpoints =
     boost::assign::map_list_of
-    (0, uint256("0000080a7932394c26a0a3098e83d087085d9f0625ebcdf8153a7e76415a8fcd"))
-    (100, uint256("00000faf9185a0904a7422a2a621c38c17be8f0a4b184f22866aec663000e7a9"))
-    // (616764, uint256("29dd0bd1c59484f290896687b4ffb6a49afa5c498caf61967c69a541f8191557")) //first block to use modifierV2
+    (0, uint256("00000bb766d48a83f8356000dc3364069e2ec2c1fd9fcfd6e00d17bdfa001e37"))
+    (50, uint256("00000164341ad492b77e21477c3d137ba6ee4ff187917270166dc437e143c08f"))
+    (31625, uint256("0000003fc1c4eb8856a4f9704eddd544186158ff086639366ab9c103aa0d2468")) //first block to use modifierV2
     // (623933, uint256("c7aafa648a0f1450157dc93bd4d7448913a85b7448f803b4ab970d91fc2a7da7"))
     // (791150, uint256("8e76f462e4e82d1bd21cb72e1ce1567d4ddda2390f26074ffd1f5d9c270e5e50"))
     // (795000, uint256("4423cceeb9fd574137a18733416275a70fdf95283cc79ad976ca399aa424a443"))
@@ -142,11 +142,16 @@ public:
         nMaturity = 30;
         nMasternodeCountDrift = 20;
         nMaxMoneyOut = 18818000000 * COIN;
-        nMNCollateral = 20000 * COIN;
+        nMNCollateral = 5000 * COIN;
+        nMNCollateralClassA = 5000 * COIN;
+        nMNCollateralClassB = 4000 * COIN;
+        nMNCollateralClassC = 3000 * COIN;
+        nMNCollateralClassD = 2000 * COIN;
         strDevpubkey = "028b4f493822fe835ec6d68396a87835f9f77723c13a2e2a3af386d3afe5fa758d";
 
         /** Height or Time Based Activations **/
         nLastPOWBlock = 1999999999;
+        nMasternodeForkBlock = 33000;
         nModifierUpdateBlock = 1999999999;
         nZerocoinStartHeight = 1999999999;
         nZerocoinStartTime = 1999999999; // October 17, 2017 4:30:00 AM
@@ -181,13 +186,13 @@ public:
         genesis.hashPrevBlock = 0;
         genesis.hashMerkleRoot = genesis.BuildMerkleTree();
         genesis.nVersion = 1;
-        genesis.nTime = 1559040000;
+        genesis.nTime = 1567364000;
         genesis.nBits = 0x1e0fffff;
 
-        genesis.nNonce = 1394234;
+        genesis.nNonce = 1075900;
 
         hashGenesisBlock = genesis.GetBlockHash();
-        assert(hashGenesisBlock == uint256("0x0000080a7932394c26a0a3098e83d087085d9f0625ebcdf8153a7e76415a8fcd"));
+        assert(hashGenesisBlock == uint256("0x00000bb766d48a83f8356000dc3364069e2ec2c1fd9fcfd6e00d17bdfa001e37"));
         assert(genesis.hashMerkleRoot == uint256("0x1cadc2c70839d86bf8f51063cbd70cbf1c606fce44716f3481f1cd6e2d9b128a"));
 
         vSeeds.push_back(CDNSSeedData("usernodes.org", "wpay001.usernodes.org"));
@@ -196,6 +201,8 @@ public:
         vSeeds.push_back(CDNSSeedData("usernodes.org", "wpay004.usernodes.org"));
         vSeeds.push_back(CDNSSeedData("usernodes.org", "wpay005.usernodes.org"));
         vSeeds.push_back(CDNSSeedData("usernodes.org", "wpay006.usernodes.org"));
+        vSeeds.push_back(CDNSSeedData("usernodes.org", "wpay007.usernodes.org"));
+        vSeeds.push_back(CDNSSeedData("usernodes.org", "wpay008.usernodes.org"));
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1, 73);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1, 110);
@@ -287,13 +294,13 @@ public:
         nRejectOldSporkKey = 1522454400; //!> Reject old spork key after Saturday, March 31, 2018 12:00:00 AM GMT
 
         //! Modify the testnet genesis block so the timestamp is valid for a later start.
-        genesis.nTime = 1559040001;
+        genesis.nTime = 1567364001;
 
-        genesis.nNonce = 934105;
+        genesis.nNonce = 899936;
 
         hashGenesisBlock = genesis.GetBlockHash();
 
-        assert(hashGenesisBlock == uint256("0x00000c75b6d8ead227980fa500559158003ae97b176fb97b122da38aaeb35a1d"));
+        assert(hashGenesisBlock == uint256("0x000007c1182cbb0430aae74562eab12c43c594989f13297a10458101443deacf"));
 
         vFixedSeeds.clear();
         vSeeds.clear();
@@ -361,7 +368,7 @@ public:
         nTargetTimespan = 24 * 60 * 60; // WPAY: 1 day
         nTargetSpacing = 1 * 60;        // WPAY: 1 minutes
         bnProofOfWorkLimit = ~uint256(0) >> 1;
-        genesis.nTime = 1559040002;
+        genesis.nTime = 1567364002;
         genesis.nBits = 0x207fffff;
 
         genesis.nNonce = 1;
@@ -369,7 +376,7 @@ public:
         hashGenesisBlock = genesis.GetBlockHash();
         nDefaultPort = 51476;
 
-        assert(hashGenesisBlock == uint256("0x3da37c63b7f3d653aef864e3c069e085d05df478c818b6d898d56488c29c3414"));
+        assert(hashGenesisBlock == uint256("0x1cfd2adf4ae3c923be75b4774cb4ce3febafcc3c7075fdc7a214800c4f6a2b42"));
 
         vFixedSeeds.clear(); //! Testnet mode doesn't have any fixed seeds.
         vSeeds.clear();      //! Testnet mode doesn't have any DNS seeds.

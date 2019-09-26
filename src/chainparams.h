@@ -79,6 +79,10 @@ public:
     int COINBASE_MATURITY() const { return nMaturity; }
     CAmount MaxMoneyOut() const { return nMaxMoneyOut; }
     CAmount MasternodeCollateral() const { return nMNCollateral; }
+    CAmount MasternodeCollateralClassA() const { return nMNCollateralClassA; }
+    CAmount MasternodeCollateralClassB() const { return nMNCollateralClassB; }
+    CAmount MasternodeCollateralClassC() const { return nMNCollateralClassC; }
+    CAmount MasternodeCollateralClassD() const { return nMNCollateralClassD; }
     /** The masternode count that we will allow the see-saw reward payments to be off by */
     int MasternodeCountDrift() const { return nMasternodeCountDrift; }
     /** Make miner stop after a block is found. In RPC, don't return until nGenProcLimit blocks are generated */
@@ -119,6 +123,7 @@ public:
     /** Height or Time Based Activations **/
     int ModifierUpgradeBlock() const { return nModifierUpdateBlock; }
     int LAST_POW_BLOCK() const { return nLastPOWBlock; }
+    int Masternode_Fork_Block() const { return nMasternodeForkBlock; }
     int Zerocoin_StartHeight() const { return nZerocoinStartHeight; }
     int Zerocoin_Block_EnforceSerialRange() const { return nBlockEnforceSerialRange; }
     int Zerocoin_Block_RecalculateAccumulators() const { return nBlockRecalculateAccumulators; }
@@ -146,10 +151,15 @@ protected:
     int64_t nTargetTimespan;
     int64_t nTargetSpacing;
     int nLastPOWBlock;
+    int nMasternodeForkBlock;
     int nMasternodeCountDrift;
     int nMaturity;
     int nModifierUpdateBlock;
     CAmount nMNCollateral;
+    CAmount nMNCollateralClassA;
+    CAmount nMNCollateralClassB;
+    CAmount nMNCollateralClassC;
+    CAmount nMNCollateralClassD;
     CAmount nMaxMoneyOut;
     int nMinerThreads;
     std::vector<CDNSSeedData> vSeeds;
