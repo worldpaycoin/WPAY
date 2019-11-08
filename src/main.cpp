@@ -1632,7 +1632,8 @@ bool AcceptableInputs(CTxMemPool& pool, CValidationState& state, const CTransact
         // Check against previous transactions
         // This is done last to help prevent CPU exhaustion denial-of-service attacks.
         if (!CheckInputs(tx, state, view, false, STANDARD_SCRIPT_VERIFY_FLAGS, true)) {
-            return error("AcceptableInputs: : ConnectInputs failed %s", hash.ToString());
+            // return error("AcceptableInputs: : ConnectInputs failed %s", hash.ToString());
+            return false;
         }
 
         // Check again against just the consensus-critical mandatory script
@@ -1815,9 +1816,7 @@ int64_t GetBlockValue(int nHeight)
     // }
 
     int64_t nSubsidy = 0;
-    if (nHeight == 1) {
-        nSubsidy = 2000000 * COIN;
-    } else if (nHeight <= 376320000) {
+    if (nHeight <= 376320000) {
         nSubsidy = 2 * COIN;
     } else {
         nSubsidy = 0;
@@ -2396,7 +2395,7 @@ bool CheckInputs(const CTransaction& tx, CValidationState& state, const CCoinsVi
 
         if (!tx.IsCoinStake()) {
             if (nValueIn < tx.GetValueOut())
-                return state.DoS(100, error("CheckInputs() : %s value in (%s) < value out (%s)", tx.GetHash().ToString(), FormatMoney(nValueIn), FormatMoney(tx.GetValueOut())),
+                return state.DoS(100, false/*error("CheckInputs() : %s value in (%s) < value out (%s)", tx.GetHash().ToString(), FormatMoney(nValueIn), FormatMoney(tx.GetValueOut()))*/,
                     REJECT_INVALID, "bad-txns-in-belowout");
 
             // Tally transaction fees

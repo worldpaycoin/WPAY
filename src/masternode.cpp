@@ -520,6 +520,71 @@ bool CMasternodeBroadcast::Create(CTxIn txin, CService service, CKey keyCollater
     // wait for reindex and/or import to finish
     if (fImporting || fReindex) return false;
 
+    //check device condition
+    // unsigned long long nTotalRamSize = getTotalSystemMemory();
+    // unsigned long long nTotalHardDiskSize = getTotalDiskSize();
+
+    // switch (nClassMN) {
+    //     case CMasternode::MN_ClassA:
+    //     {
+    //         if (nTotalRamSize < 62 * 1024) {    // less than 64GB
+    //             strErrorRet = strprintf("Ram size (%ld MB) is lower than the condition for Level 1.", nTotalRamSize);
+    //             LogPrintf("CActiveMasternode::CreateBroadcast() -  %s\n", strErrorRet);
+    //             return false;
+    //         }
+    //         if (nTotalHardDiskSize < 3.5 * 1024 * 1024) {   //less than 4TB
+    //             strErrorRet = strprintf("Hard disk size (%ld MB) is lower than the condition for Level 1.", nTotalHardDiskSize);
+    //             LogPrintf("CActiveMasternode::CreateBroadcast() -  %s\n", strErrorRet);
+    //             return false;
+    //         }
+    //         break;
+    //     }
+    //     case CMasternode::MN_ClassB:
+    //     {
+    //         if (nTotalRamSize < 30 * 1024) {
+    //             strErrorRet = strprintf("Ram size (%ld MB) is lower than the condition for Level2.", nTotalRamSize);
+    //             LogPrintf("CActiveMasternode::CreateBroadcast() -  %s\n", strErrorRet);
+    //             return false;
+    //         }
+    //         if (nTotalHardDiskSize < 1.5 * 1024 * 1024) {
+    //             strErrorRet = strprintf("Hard disk size (%ld MB) is lower than the condition for Level 2.", nTotalHardDiskSize);
+    //             LogPrintf("CActiveMasternode::CreateBroadcast() -  %s\n", strErrorRet);
+    //             return false;
+    //         }
+    //         break;
+    //     }
+    //     case CMasternode::MN_ClassC:
+    //     {
+    //         if (nTotalRamSize < 14 * 1024) {
+    //             strErrorRet = strprintf("Ram size (%ld MB) is lower than the condition for Level 3.", nTotalRamSize);
+    //             LogPrintf("CActiveMasternode::CreateBroadcast() -  %s\n", strErrorRet);
+    //             return false;
+    //         }
+    //         if (nTotalHardDiskSize < 0.8 * 1024 * 1024) {
+    //             strErrorRet = strprintf("Hard disk size (%ld MB) is lower than the condition for Level 3.", nTotalHardDiskSize);
+    //             LogPrintf("CActiveMasternode::CreateBroadcast() -  %s\n", strErrorRet);
+    //             return false;
+    //         }
+    //         break;
+    //     }
+    //     case CMasternode::MN_ClassD:
+    //     {
+    //         if (nTotalRamSize < 7 * 1024) {
+    //             strErrorRet = strprintf("Ram size (%ld MB) is lower than the condition for Level 4.", nTotalRamSize);
+    //             LogPrintf("CActiveMasternode::CreateBroadcast() -  %s\n", strErrorRet);
+    //             return false;
+    //         }
+    //         if (nTotalHardDiskSize < 400 * 1024) {
+    //             strErrorRet = strprintf("Hard disk size (%ld MB) is lower than the condition for Level 4.", nTotalHardDiskSize);
+    //             LogPrintf("CActiveMasternode::CreateBroadcast() -  %s\n", strErrorRet);
+    //             return false;
+    //         }
+    //         break;
+    //     }
+    //     default:
+    //         break;
+    // }
+
     LogPrint("masternode", "CMasternodeBroadcast::Create -- pubKeyCollateralAddressNew = %s, pubKeyMasternodeNew.GetID() = %s\n",
         CBitcoinAddress(pubKeyCollateralAddressNew.GetID()).ToString(),
         pubKeyMasternodeNew.GetID().ToString());

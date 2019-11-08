@@ -427,10 +427,11 @@ void PrintExceptionContinue(std::exception* pex, const char* pszThread)
 boost::filesystem::path GetDefaultDataDir()
 {
     namespace fs = boost::filesystem;
-// Windows < Vista: C:\Documents and Settings\Username\Application Data\WPAY
-// Windows >= Vista: C:\Users\Username\AppData\Roaming\WPAY
-// Mac: ~/Library/Application Support/WPAY
-// Unix: ~/.worldpaycoin
+    // Windows < Vista: C:\Documents and Settings\Username\Application Data\WPAY
+    // Windows >= Vista: C:\Users\Username\AppData\Roaming\WPAY
+    // Mac: ~/Library/Application Support/WPAY
+    // Unix: ~/.worldpaycoin
+
 #ifdef WIN32
     // Windows
     return GetSpecialFolderPath(CSIDL_APPDATA) / "WPAY";
@@ -740,6 +741,120 @@ boost::filesystem::path GetSpecialFolderPath(int nFolder, bool fCreate)
     return fs::path("");
 }
 #endif
+
+unsigned long long getTotalSystemMemory() //this unit is MB.
+{
+#ifdef WIN32
+    MEMORYSTATUSEX status;
+    status.dwLength = sizeof(status);
+    GlobalMemoryStatusEx(&status);
+    return status.ullTotalPhys / (1024 * 1024);
+#else
+    long pages = sysconf(_SC_PHYS_PAGES);
+    long page_size = sysconf(_SC_PAGE_SIZE);
+    return (pages * page_size) / (1024 * 1024);
+#endif
+}
+
+#ifdef WIN32
+typedef BOOL(WINAPI* P_GDFSE)(LPCTSTR, PULARGE_INTEGER, PULARGE_INTEGER, PULARGE_INTEGER);
+#endif
+
+unsigned long long getTotalDiskSize()
+{ // this unit is MB
+#ifdef WIN32
+    DWORD dwSectPerClust,
+        dwBytesPerSect,
+        dwFreeClusters,
+        dwTotalClusters;
+
+    P_GDFSE pGetDiskFreeSpaceEx = NULL;
+
+    unsigned __int64 i64FreeBytesToCaller,
+        i64TotalBytes,
+        i64FreeBytes,
+        i64ResultTotalBytes = 0;
+
+    BOOL fResult;
+
+    DWORD drives = GetLogicalDrives();
+    for (int i = 0; i < 26; i++) {
+        if (drives & (1 << i)) {
+	    char *pszDrive = NULL, szDrive[4];
+	    szDrive[0] = (char)(65 + i);
+	    szDrive[1] = ':';
+	    szDrive[2] = '\\';
+	    szDrive[3] = '\0';
+	    pszDrive = szDrive;
+            __int64 total, free;
+
+            if (GetDriveType(pszDrive) != DRIVE_FIXED) {
+                // printf("Drive %s not a fixed drive, skipping\n", pszDrive);
+            } else {
+                pGetDiskFreeSpaceEx = (P_GDFSE)GetProcAddress(
+                    GetModuleHandle("kernel32.dll"),
+                    "GetDiskFreeSpaceExA");
+                if (pGetDiskFreeSpaceEx) {
+                    fResult = pGetDiskFreeSpaceEx(pszDrive,
+                        (PULARGE_INTEGER)&i64FreeBytesToCaller,
+                        (PULARGE_INTEGER)&i64TotalBytes,
+                        (PULARGE_INTEGER)&i64FreeBytes);
+                    if (fResult) {
+                        // printf("\n\nGetDiskFreeSpaceEx reports\n\n");
+                        // printf("Available space to caller = %I64u MB\n",
+                        //     i64FreeBytesToCaller / (1024 * 1024));
+                        // printf("Total space               = %I64u MB\n",
+                        //     i64TotalBytes / (1024 * 1024));
+                        // printf("Free space on drive       = %I64u MB\n",
+                        //     i64FreeBytes / (1024 * 1024));
+                        i64ResultTotalBytes += i64TotalBytes;
+                    }
+                } else {
+                    fResult = GetDiskFreeSpace(NULL,
+                        &dwSectPerClust,
+                        &dwBytesPerSect,
+                        &dwFreeClusters,
+                        &dwTotalClusters);
+                    if (fResult) {
+                        // force 64-bit math
+                        i64TotalBytes = (__int64)dwTotalClusters * dwSectPerClust *
+                                        dwBytesPerSect;
+                        i64FreeBytes = (__int64)dwFreeClusters * dwSectPerClust *
+                                       dwBytesPerSect;
+
+                        // printf("GetDiskFreeSpace reports\n\n");
+                        // printf("Free space  = %I64u MB\n",
+                        //     i64FreeBytes / (1024 * 1024));
+                        // printf("Total space = %I64u MB\n",
+                        //     i64TotalBytes / (1024 * 1024));
+
+                        i64ResultTotalBytes += i64TotalBytes;
+                    }
+                }
+
+                if (!fResult)
+                    LogPrintf("error: %lu:  could not get free space for \"%s\"\n",
+                        GetLastError(), pszDrive);
+            }
+        }
+    }
+
+    return i64ResultTotalBytes / (1024 * 1024);
+#else
+    string line;
+    ifstream myfile("/sys/block/sda/size");
+    if (myfile.is_open()) {
+        while (getline(myfile, line)) {
+            std::string::size_type sz = 0; // alias of size_t
+
+            unsigned long long nRet = std::stoull(line, &sz, 0);
+            nRet = nRet / 2048;
+        }
+        myfile.close();
+    }
+    return 0;
+#endif
+}
 
 boost::filesystem::path GetTempPath()
 {

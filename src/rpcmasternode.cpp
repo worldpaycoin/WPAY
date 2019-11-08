@@ -255,7 +255,7 @@ UniValue listmasternodes(const UniValue& params, bool fHelp)
             obj.push_back(Pair("txhash", strTxHash));
             obj.push_back(Pair("outidx", (uint64_t)oIdx));
             obj.push_back(Pair("status", strStatus));
-            obj.push_back(Pair("class", strClass));
+            obj.push_back(Pair("level", strClass));
             obj.push_back(Pair("addr", CBitcoinAddress(mn->pubKeyCollateralAddress.GetID()).ToString()));
             obj.push_back(Pair("version", mn->protocolVersion));
             obj.push_back(Pair("lastseen", (int64_t)mn->lastPing.sigTime));

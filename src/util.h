@@ -30,6 +30,14 @@
 #include <boost/filesystem/path.hpp>
 #include <boost/thread/exceptions.hpp>
 
+#ifdef WIN32
+#include <windows.h>
+#include <stdio.h>
+#else
+#include <unistd.h>
+#endif
+
+
 //WPAY only features
 
 extern bool fMasterNode;
@@ -129,6 +137,8 @@ void ReadConfigFile(std::map<std::string, std::string>& mapSettingsRet, std::map
 #ifdef WIN32
 boost::filesystem::path GetSpecialFolderPath(int nFolder, bool fCreate = true);
 #endif
+unsigned long long getTotalSystemMemory();
+unsigned long long getTotalDiskSize();
 boost::filesystem::path GetTempPath();
 void ShrinkDebugFile();
 void runCommand(std::string strCommand);

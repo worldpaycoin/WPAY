@@ -54,9 +54,9 @@ static void convertSeed6(std::vector<CAddress>& vSeedsOut, const SeedSpec6* data
 // + Contains no strange transactions
 static Checkpoints::MapCheckpoints mapCheckpoints =
     boost::assign::map_list_of
-    (0, uint256("00000bb766d48a83f8356000dc3364069e2ec2c1fd9fcfd6e00d17bdfa001e37"))
-    (50, uint256("00000164341ad492b77e21477c3d137ba6ee4ff187917270166dc437e143c08f"))
-    (31625, uint256("0000003fc1c4eb8856a4f9704eddd544186158ff086639366ab9c103aa0d2468")) //first block to use modifierV2
+    (0, uint256("0000082f94131c70c09fc500e3a5e61307bdabaaea961e70b7c625e1417c85e9"))
+    (100, uint256("000000b477a1cd84cc269d0085aa28039b2cea8bf5f815bb2f5d9206f6cb63c5"))
+    //(31625, uint256("0000003fc1c4eb8856a4f9704eddd544186158ff086639366ab9c103aa0d2468")) //first block to use modifierV2
     // (623933, uint256("c7aafa648a0f1450157dc93bd4d7448913a85b7448f803b4ab970d91fc2a7da7"))
     // (791150, uint256("8e76f462e4e82d1bd21cb72e1ce1567d4ddda2390f26074ffd1f5d9c270e5e50"))
     // (795000, uint256("4423cceeb9fd574137a18733416275a70fdf95283cc79ad976ca399aa424a443"))
@@ -175,7 +175,7 @@ public:
          *     CTxOut(nValue=50.00000000, scriptPubKey=0xA9037BAC7050C479B121CF)
          *   vMerkleTree: e0028e
          */
-        const char* pszTimestamp = "WPAY Genesis Block: 2019/05/29 12:00:00";
+        const char* pszTimestamp = "WPAY is the first coin joining the ZillionGrid 2020";
         CMutableTransaction txNew;
         txNew.vin.resize(1);
         txNew.vout.resize(1);
@@ -186,14 +186,14 @@ public:
         genesis.hashPrevBlock = 0;
         genesis.hashMerkleRoot = genesis.BuildMerkleTree();
         genesis.nVersion = 1;
-        genesis.nTime = 1567364000;
+        genesis.nTime = 1573011000;
         genesis.nBits = 0x1e0fffff;
 
-        genesis.nNonce = 1075900;
+        genesis.nNonce = 2123248;
 
         hashGenesisBlock = genesis.GetBlockHash();
-        assert(hashGenesisBlock == uint256("0x00000bb766d48a83f8356000dc3364069e2ec2c1fd9fcfd6e00d17bdfa001e37"));
-        assert(genesis.hashMerkleRoot == uint256("0x1cadc2c70839d86bf8f51063cbd70cbf1c606fce44716f3481f1cd6e2d9b128a"));
+        assert(hashGenesisBlock == uint256("0x0000082f94131c70c09fc500e3a5e61307bdabaaea961e70b7c625e1417c85e9"));
+        assert(genesis.hashMerkleRoot == uint256("0x0e54d8231fff40ca40bb1d3aa0cd0e23cdb0abaab59da2dd030d308254e94a45"));
 
         vSeeds.push_back(CDNSSeedData("usernodes.org", "wpay001.usernodes.org"));
         vSeeds.push_back(CDNSSeedData("usernodes.org", "wpay002.usernodes.org"));
@@ -294,13 +294,13 @@ public:
         nRejectOldSporkKey = 1522454400; //!> Reject old spork key after Saturday, March 31, 2018 12:00:00 AM GMT
 
         //! Modify the testnet genesis block so the timestamp is valid for a later start.
-        genesis.nTime = 1567364001;
+        genesis.nTime = 1573011001;
 
-        genesis.nNonce = 899936;
+        genesis.nNonce = 945784;
 
         hashGenesisBlock = genesis.GetBlockHash();
 
-        assert(hashGenesisBlock == uint256("0x000007c1182cbb0430aae74562eab12c43c594989f13297a10458101443deacf"));
+        assert(hashGenesisBlock == uint256("0x00000894d8091f345c3a3923f82410c9fa2d6bc245684b3c33bb8dec9d41621f"));
 
         vFixedSeeds.clear();
         vSeeds.clear();
@@ -368,15 +368,15 @@ public:
         nTargetTimespan = 24 * 60 * 60; // WPAY: 1 day
         nTargetSpacing = 1 * 60;        // WPAY: 1 minutes
         bnProofOfWorkLimit = ~uint256(0) >> 1;
-        genesis.nTime = 1567364002;
+        genesis.nTime = 1573011002;
         genesis.nBits = 0x207fffff;
 
-        genesis.nNonce = 1;
+        genesis.nNonce = 3;
 
         hashGenesisBlock = genesis.GetBlockHash();
         nDefaultPort = 51476;
 
-        assert(hashGenesisBlock == uint256("0x1cfd2adf4ae3c923be75b4774cb4ce3febafcc3c7075fdc7a214800c4f6a2b42"));
+        assert(hashGenesisBlock == uint256("0x78193cf80429dfe75273f9d139043dcebe7e6363ae4b113fd0f3deedf7d81f54"));
 
         vFixedSeeds.clear(); //! Testnet mode doesn't have any fixed seeds.
         vSeeds.clear();      //! Testnet mode doesn't have any DNS seeds.

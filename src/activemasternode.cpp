@@ -11,6 +11,7 @@
 #include "masternodeman.h"
 #include "protocol.h"
 #include "spork.h"
+#include "util.h"
 
 //
 // Bootup the Masternode, look for a 10000 WPAY input and register on the network
@@ -273,6 +274,7 @@ bool CActiveMasternode::CreateBroadcast(std::string strService, std::string strK
     addrman.Add(CAddress(service), CNetAddr("127.0.0.1"), 2 * 60 * 60);
 
     int nMNClass = GetMasterNodeClass(strTxHash, strOutputIndex);
+
     return CreateBroadcast(vin, CService(strService), keyCollateralAddress, pubKeyCollateralAddress, keyMasternode, pubKeyMasternode, errorMessage, mnb, nMNClass);
 }
 
@@ -280,6 +282,71 @@ bool CActiveMasternode::CreateBroadcast(CTxIn vin, CService service, CKey keyCol
 {
 	// wait for reindex and/or import to finish
 	if (fImporting || fReindex) return false;
+
+    //check device condition
+    // unsigned long long nTotalRamSize = getTotalSystemMemory();
+    // unsigned long long nTotalHardDiskSize = getTotalDiskSize();
+
+    // switch (nMNClass) {
+    //     case CMasternode::MN_ClassA:
+    //     {
+    //         if (nTotalRamSize < 62 * 1024) {    // less than 64GB
+    //             errorMessage = strprintf("Ram size (%ld MB) is lower than the condition for Level 1.", nTotalRamSize);
+    //             LogPrintf("CActiveMasternode::CreateBroadcast() -  %s\n", errorMessage);
+    //             return false;
+    //         }
+    //         if (nTotalHardDiskSize < 3.5 * 1024 * 1024) {   //less than 4TB
+    //             errorMessage = strprintf("Hard disk size (%ld MB) is lower than the condition for Level 1.", nTotalHardDiskSize);
+    //             LogPrintf("CActiveMasternode::CreateBroadcast() -  %s\n", errorMessage);
+    //             return false;
+    //         }
+    //         break;
+    //     }
+    //     case CMasternode::MN_ClassB:
+    //     {
+    //         if (nTotalRamSize < 30 * 1024) {
+    //             errorMessage = strprintf("Ram size (%ld MB) is lower than the condition for Level2.", nTotalRamSize);
+    //             LogPrintf("CActiveMasternode::CreateBroadcast() -  %s\n", errorMessage);
+    //             return false;
+    //         }
+    //         if (nTotalHardDiskSize < 1.5 * 1024 * 1024) {
+    //             errorMessage = strprintf("Hard disk size (%ld MB) is lower than the condition for Level 2.", nTotalHardDiskSize);
+    //             LogPrintf("CActiveMasternode::CreateBroadcast() -  %s\n", errorMessage);
+    //             return false;
+    //         }
+    //         break;
+    //     }
+    //     case CMasternode::MN_ClassC:
+    //     {
+    //         if (nTotalRamSize < 14 * 1024) {
+    //             errorMessage = strprintf("Ram size (%ld MB) is lower than the condition for Level 3.", nTotalRamSize);
+    //             LogPrintf("CActiveMasternode::CreateBroadcast() -  %s\n", errorMessage);
+    //             return false;
+    //         }
+    //         if (nTotalHardDiskSize < 0.8 * 1024 * 1024) {
+    //             errorMessage = strprintf("Hard disk size (%ld MB) is lower than the condition for Level 3.", nTotalHardDiskSize);
+    //             LogPrintf("CActiveMasternode::CreateBroadcast() -  %s\n", errorMessage);
+    //             return false;
+    //         }
+    //         break;
+    //     }
+    //     case CMasternode::MN_ClassD:
+    //     {
+    //         if (nTotalRamSize < 7 * 1024) {
+    //             errorMessage = strprintf("Ram size (%ld MB) is lower than the condition for Level 4.", nTotalRamSize);
+    //             LogPrintf("CActiveMasternode::CreateBroadcast() -  %s\n", errorMessage);
+    //             return false;
+    //         }
+    //         if (nTotalHardDiskSize < 400 * 1024) {
+    //             errorMessage = strprintf("Hard disk size (%ld MB) is lower than the condition for Level 4.", nTotalHardDiskSize);
+    //             LogPrintf("CActiveMasternode::CreateBroadcast() -  %s\n", errorMessage);
+    //             return false;
+    //         }
+    //         break;
+    //     }
+    //     default:
+    //         break;
+    // }
 
     CMasternodePing mnp(vin);
     if (!mnp.Sign(keyMasternode, pubKeyMasternode)) {
