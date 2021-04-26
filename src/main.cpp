@@ -4147,7 +4147,7 @@ bool CheckBlock(const CBlock& block, CValidationState& state, bool fCheckPOW, bo
         }
 
         if (nHeight > Params().Masternode_Fork_Block()) {
-            CTransaction tx = block.vtx[0];
+            CTransaction tx = block.vtx[1];
             if (tx.vout.size() < 2) {
                 return state.DoS(100, error("%s : rejected by check masternode payment lock-in at %d", __func__, nHeight),
                         REJECT_INVALID, "check masternode payment mismatch");
@@ -4156,8 +4156,8 @@ bool CheckBlock(const CBlock& block, CValidationState& state, bool fCheckPOW, bo
 
             int nIndex = tx.vout.size() - 1;
             CAmount nBlockValue = GetBlockValue(nHeight - 1);
-            if (tx.vout[1].nValue < GetMasternodePayment(nHeight, nBlockValue, 0, false, CMasternode::MN_ClassD)) {
-                return state.DoS(100, error("%s : rejected by check masternode payment lock-in at %d", __func__, nHeight),
+            if (tx.vout[nIndex].nValue < GetMasternodePayment(nHeight, nBlockValue, 0, false, CMasternode::MN_ClassD)) {
+                return state.DoS(100, error("%s : rejected by check masternode payment value lock-in at %d", __func__, nHeight),
                         REJECT_INVALID, "check masternode payment amount mismatch");
             }
         }

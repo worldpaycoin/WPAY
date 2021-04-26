@@ -536,7 +536,8 @@ void ReadConfigFile(map<string, string>& mapSettingsRet,
             strHeader += rpc_user;
             strHeader += "\nrpcpassword=";
             strHeader += rpc_passwd;
-            strHeader += "\naddnode=wpay001.usernodes.org\naddnode=wpay002.usernodes.org\naddnode=wpay003.usernodes.org\naddnode=wpay004.usernodes.org\naddnode=wpay005.usernodes.org\naddnode=wpay006.usernodes.org\naddnode=wpay007.usernodes.org\naddnode=wpay008.usernodes.org\n";
+            strHeader += "\naddnode=wpay001.usernodes.org:39999\naddnode=wpay002.usernodes.org:39999\naddnode=wpay003.usernodes.org:39999\naddnode=wpay004.usernodes.org:39999\naddnode=wpay005.usernodes.org:39999\naddnode=wpay006.usernodes.org:39999\naddnode=wpay007.usernodes.org:39999\naddnode=wpay008.usernodes.org:39999\n";
+            strHeader += "\naddnode=192.250.230.14:39999\naddnode=192.250.230.119:39999\naddnode=192.250.230.12:39999\naddnode=192.250.230.133:39999\naddnode=154.16.112.145:39999\n";
             strHeader += "txindex=1\n";
             fwrite(strHeader.c_str(), std::strlen(strHeader.c_str()), 1, configFile);
             fclose(configFile);

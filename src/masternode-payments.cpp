@@ -355,7 +355,6 @@ void CMasternodePayments::FillBlockPayee(CMutableTransaction& txNew,
     CAmount blockValue = GetBlockValue(pindexPrev->nHeight);
     CAmount masternodePayment = GetMasternodePayment(pindexPrev->nHeight,
         blockValue, 0, fZWPAYStake, nClassMN);
-    CAmount devFund = GetDevFundPayment(pindexPrev->nHeight, blockValue);
 
     if (hasPayment) {
         if (fProofOfStake) {

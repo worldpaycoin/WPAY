@@ -56,7 +56,7 @@ static Checkpoints::MapCheckpoints mapCheckpoints =
     boost::assign::map_list_of
     (0, uint256("0000082f94131c70c09fc500e3a5e61307bdabaaea961e70b7c625e1417c85e9"))
     (100, uint256("000000b477a1cd84cc269d0085aa28039b2cea8bf5f815bb2f5d9206f6cb63c5"))
-    //(31625, uint256("0000003fc1c4eb8856a4f9704eddd544186158ff086639366ab9c103aa0d2468")) //first block to use modifierV2
+    (717000, uint256("bb8b509daec7f168bceb59f8827173efe1bb8029b62e8c4405c977fdc22dab6c")) //first block to use modifierV2
     // (623933, uint256("c7aafa648a0f1450157dc93bd4d7448913a85b7448f803b4ab970d91fc2a7da7"))
     // (791150, uint256("8e76f462e4e82d1bd21cb72e1ce1567d4ddda2390f26074ffd1f5d9c270e5e50"))
     // (795000, uint256("4423cceeb9fd574137a18733416275a70fdf95283cc79ad976ca399aa424a443"))
@@ -150,8 +150,8 @@ public:
         strDevpubkey = "028b4f493822fe835ec6d68396a87835f9f77723c13a2e2a3af386d3afe5fa758d";
 
         /** Height or Time Based Activations **/
-        nLastPOWBlock = 1999999999;
-        nMasternodeForkBlock = 33000;
+        nLastPOWBlock = 716000;
+        nMasternodeForkBlock = 716000;
         nModifierUpdateBlock = 1999999999;
         nZerocoinStartHeight = 1999999999;
         nZerocoinStartTime = 1999999999; // October 17, 2017 4:30:00 AM
